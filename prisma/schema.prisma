@@ -10,8 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Leaves {
+  id        Int      @id @unique @default(autoincrement())
+  userId    Int
+  startDate DateTime
+  endDate   DateTime
+  reason    String
+  User      User     @relation(fields: [userId], references: [id])
+  // 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
-  id                Int      @id @default(autoincrement())
+  id                Int      @id @unique @default(autoincrement())
   // 
   firstName         String
   lastName          String
@@ -24,6 +36,8 @@ model User {
   isConfirmed       Boolean  @default(false)
   confirmationToken String?
   // 
+  leaves            Leaves[]
+  // 
   createdAt         DateTime @default(now())
-  updatedAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
