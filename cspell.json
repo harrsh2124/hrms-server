@@ -6,7 +6,8 @@
     "words": [
         "multistream",
         "Parens",
-        "pino"
+        "pino",
+        "signin"
     ],
     "ignoreWords": [],
     "import": []
