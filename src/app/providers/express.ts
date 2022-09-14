@@ -8,6 +8,12 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
 import { env } from '../../env';
+import { router } from '../../routes/api';
+import {
+    ExceptionHandler,
+    NotFoundHandler,
+} from '../http/middleware/ExceptionHandler';
+import { RequestLogger } from '../http/middleware/RequestLogger';
 
 export class Express {
     app: Application;
@@ -45,6 +51,12 @@ export class Express {
         this.app.set('port', PORT);
     };
 
+    configureViews = () => {
+        this.app.set('view engine', 'hbs');
+        this.app.set('views', env.app.root_dir + '/views/');
+        this.app.use(`${env.app.api_prefix}`, RequestLogger, router);
+    };
+
     configureRateLimiter = async () => {
         this.app.use(
             rateLimit({
@@ -55,5 +67,10 @@ export class Express {
                 legacyHeaders: false, // Disable the `X-RateLimit-*` headers
             })
         );
+    };
+
+    configureExceptionHandler = () => {
+        this.app.use(NotFoundHandler);
+        this.app.use(ExceptionHandler);
     };
 }
