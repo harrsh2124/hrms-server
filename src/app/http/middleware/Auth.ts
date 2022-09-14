@@ -18,6 +18,9 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
                 where: {
                     // @ts-ignore
                     email: requestUser.email,
+
+                    // @ts-ignore
+                    id: requestUser.id,
                 },
             });
             if (!user) {

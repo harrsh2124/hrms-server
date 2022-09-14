@@ -69,6 +69,7 @@ export class AuthController {
             const token = jwt.sign(
                 {
                     email: user.email,
+                    id: user.id,
                 },
                 env.app.auth.secret
             );

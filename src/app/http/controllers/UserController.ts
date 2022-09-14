@@ -5,27 +5,21 @@ import { ResponseHandler } from '../middleware/ResponseHandler';
 export class UserController {
     public static async profile(req: Request, res: Response) {
         try {
-            const { email } = req.body.requestUser;
-            const { id } = req.params;
+            let id;
+            id = req.params.id;
 
-            let user;
-            if (id) {
-                user = await prisma.user.findFirst({
-                    where: {
-                        id: +id,
-                        isActive: true,
-                        isConfirmed: true,
-                    },
-                });
-            } else {
-                user = await prisma.user.findFirst({
-                    where: {
-                        email,
-                        isActive: true,
-                        isConfirmed: true,
-                    },
-                });
+            if (!id) {
+                id = req.body.requestUser.id;
             }
+
+            const user = await prisma.user.findFirst({
+                where: {
+                    id: +id,
+                    isActive: true,
+                    isConfirmed: true,
+                },
+            });
+
             if (!user) {
                 throw new Error('User not found.');
             }
