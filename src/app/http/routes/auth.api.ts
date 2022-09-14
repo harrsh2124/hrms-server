@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
 import { RequestValidator } from '../middleware/RequestValidator';
-import { UserSignInRequest } from '../requests/UserSignInRequest';
-import { UserSignUpRequest } from '../requests/UserSignUpRequest';
+import { UserSignInRequest } from '../requests/auth/UserSignInRequest';
+import { UserSignUpRequest } from '../requests/auth/UserSignUpRequest';
 
 export const AuthRouter = Router();
 
