@@ -11,7 +11,9 @@
         "dev": "ts-node-dev --respawn --transpile-only --exit-child src/app.ts | pino-pretty -t='SYS:ddd mmm dd yyyy h:MM:ss TT'",
         "build": "rimraf dist && npx tsc",
         "start": "node dist/app.js",
-        "format": "prettier --write \"**/*.+(ts|json|yml|yaml|md)\""
+        "format": "prettier --write \"**/*.+(ts|json|yml|yaml|md)\"",
+        "migrate": "npx prisma migrate dev --name",
+        "studio": "npx prisma studio"
     },
     "dependencies": {
         "@prisma/client": "^4.3.1",

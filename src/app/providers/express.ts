@@ -8,7 +8,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
 import { env } from '../../env';
-import { router } from '../../routes/api';
+import { router } from '../http/routes/api';
 import {
     ExceptionHandler,
     NotFoundHandler,
