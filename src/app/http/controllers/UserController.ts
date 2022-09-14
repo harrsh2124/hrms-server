@@ -13,12 +13,16 @@ export class UserController {
                 user = await prisma.user.findFirst({
                     where: {
                         id: +id,
+                        isActive: true,
+                        isConfirmed: true,
                     },
                 });
             } else {
                 user = await prisma.user.findFirst({
                     where: {
                         email,
+                        isActive: true,
+                        isConfirmed: true,
                     },
                 });
             }
