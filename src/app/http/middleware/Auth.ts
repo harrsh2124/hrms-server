@@ -21,6 +21,8 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
 
                     // @ts-ignore
                     id: requestUser.id,
+                    isActive: true,
+                    isConfirmed: true,
                 },
             });
             if (!user) {
