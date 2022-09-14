@@ -1,2 +1,3 @@
-# hrms-server
+# HRMS (server)
+
 Server side code of the office HRMS portal.
