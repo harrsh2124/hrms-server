@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { logger } from '../../providers/logger';
+import { AuthRouter } from './auth.api';
 
 export const router = Router();
 
 // Import routes
-
-// Add other routes
+router.use('/auth', AuthRouter);
 
 /**
  * 404 api redirects
