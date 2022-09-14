@@ -87,11 +87,6 @@ export class AuthController {
         try {
             const { token, id } = req.params;
 
-            console.log({
-                token,
-                id,
-            });
-
             const user = await prisma.user.findFirst({
                 where: {
                     id: +id,
