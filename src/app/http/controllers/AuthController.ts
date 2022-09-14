@@ -18,7 +18,7 @@ export class AuthController {
                 },
             });
             if (existingUser) {
-                throw Error('User already exists.');
+                throw new Error('User already exists.');
             }
 
             const user = await UserSignUp({
@@ -48,7 +48,7 @@ export class AuthController {
                 },
             });
             if (!user) {
-                throw Error('User not found.');
+                throw new Error('User not found.');
             }
 
             const isUserAuthenticated = bcrypt.compareSync(
@@ -56,7 +56,11 @@ export class AuthController {
                 user.password
             );
             if (!isUserAuthenticated) {
-                throw Error('Please enter the correct password.');
+                throw new Error('Please enter the correct password.');
+            }
+
+            if (!user.isActive || !user.isConfirmed) {
+                throw new Error('User is not activated.');
             }
 
             // @ts-ignore
@@ -73,6 +77,45 @@ export class AuthController {
                 user,
                 token,
                 message: 'User signed in successfully.',
+            });
+        } catch (error) {
+            return ResponseHandler(req, res, null, error);
+        }
+    }
+
+    public static async verifyUser(req: Request, res: Response) {
+        try {
+            const { token, id } = req.params;
+
+            console.log({
+                token,
+                id,
+            });
+
+            const user = await prisma.user.findFirst({
+                where: {
+                    id: +id,
+                    isConfirmed: false,
+                    isActive: true,
+                    confirmationToken: token,
+                },
+            });
+            if (!user) {
+                throw new Error('User not found.');
+            }
+
+            await prisma.user.update({
+                where: {
+                    id: +id,
+                },
+                data: {
+                    confirmationToken: null,
+                    isConfirmed: true,
+                },
+            });
+
+            return ResponseHandler(req, res, {
+                message: 'User verified successfully.',
             });
         } catch (error) {
             return ResponseHandler(req, res, null, error);

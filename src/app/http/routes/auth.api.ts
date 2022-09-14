@@ -17,3 +17,5 @@ AuthRouter.post(
     RequestValidator(UserSignInRequest),
     AuthController.signIn
 );
+
+AuthRouter.get('/verify/:token/:id', AuthController.verifyUser);

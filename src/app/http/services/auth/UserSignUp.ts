@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { prisma } from '../../../providers/db';
 
 export const UserSignUp = async (props: Props) => {
@@ -13,6 +14,7 @@ export const UserSignUp = async (props: Props) => {
             contactNumber,
             firstName,
             lastName,
+            confirmationToken: crypto.randomBytes(20).toString('hex'),
         },
     });
 

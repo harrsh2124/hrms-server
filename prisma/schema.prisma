@@ -11,18 +11,19 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   // 
-  firstName     String
-  lastName      String
+  firstName         String
+  lastName          String
   // 
-  contactNumber String   @unique
-  email         String   @unique
-  password      String
+  contactNumber     String   @unique
+  email             String   @unique
+  password          String
   // 
-  isActive      Boolean  @default(false)
-  isConfirmed   Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  isConfirmed       Boolean  @default(false)
+  confirmationToken String?
   // 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
 }
