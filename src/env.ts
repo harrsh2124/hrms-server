@@ -19,5 +19,9 @@ export const env = {
         cors: {
             urls: getOsEnv('CORS_AVAILABLE_LINKS').split(','),
         },
+
+        auth: {
+            secret: getOsEnv('JWT_SECRET'),
+        },
     },
 };

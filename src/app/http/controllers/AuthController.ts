@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { env } from '../../../env';
 import { prisma } from '../../providers/db';
 import { ResponseHandler } from '../middleware/ResponseHandler';
 import { UserSignUp } from '../services/auth/UserSignUp';
@@ -40,7 +42,7 @@ export class AuthController {
         try {
             const { email, password } = req.body;
 
-            let user = await prisma.user.findFirst({
+            const user = await prisma.user.findFirst({
                 where: {
                     email,
                 },
@@ -60,9 +62,17 @@ export class AuthController {
             // @ts-ignore
             delete user.password;
 
+            const token = jwt.sign(
+                {
+                    email: user.email,
+                },
+                env.app.auth.secret
+            );
+
             return ResponseHandler(req, res, {
                 user,
-                message: 'User created successfully.',
+                token,
+                message: 'User signed in successfully.',
             });
         } catch (error) {
             return ResponseHandler(req, res, null, error);
