@@ -9,7 +9,7 @@ export class UserController {
             id = req.params.id;
 
             if (!id) {
-                id = req.body.requestUser.id;
+                id = req.body.requestUser.userID;
             }
 
             const user = await prisma.user.findFirst({

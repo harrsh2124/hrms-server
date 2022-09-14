@@ -17,10 +17,10 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
             const user = prisma.user.findFirst({
                 where: {
                     // @ts-ignore
-                    email: requestUser.email,
+                    email: requestUser.userEmail,
 
                     // @ts-ignore
-                    id: requestUser.id,
+                    id: requestUser.userID,
                     isActive: true,
                     isConfirmed: true,
                 },
@@ -30,6 +30,7 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
             }
 
             req.body = {
+                ...req.body,
                 requestUser,
             };
             next();
