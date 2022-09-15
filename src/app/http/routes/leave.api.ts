@@ -10,3 +10,7 @@ LeaveRouter.post(
     RequestValidator(NewLeaveRequest),
     LeaveController.addLeave
 );
+
+LeaveRouter.put('/approve/:leaveId', LeaveController.approveLeave);
+
+LeaveRouter.put('/revert/:leaveId', LeaveController.approveLeave);

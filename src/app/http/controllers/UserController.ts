@@ -32,6 +32,14 @@ export class UserController {
                             startDate: true,
                             endDate: true,
                             reason: true,
+                            isApproved: true,
+                            approvedByUser: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    email: true,
+                                },
+                            },
                         },
                     },
                     createdAt: true,

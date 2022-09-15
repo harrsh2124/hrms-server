@@ -45,4 +45,29 @@ export class LeaveController {
             return ResponseHandler(req, res, null, error);
         }
     }
+
+    public static async approveLeave(req: Request, res: Response) {
+        try {
+            const { userID } = req.body.requestUser;
+            const { leaveId } = req.params;
+            const approveLeave = req.originalUrl.includes('approve');
+
+            const leave = await prisma.leave.update({
+                where: {
+                    id: +leaveId,
+                },
+                data: {
+                    isApproved: approveLeave,
+                    approvedByUserId: approveLeave ? userID : null,
+                },
+            });
+
+            return ResponseHandler(req, res, {
+                leave,
+                message: 'Leave approved successfully.',
+            });
+        } catch (error) {
+            return ResponseHandler(req, res, null, error);
+        }
+    }
 }
