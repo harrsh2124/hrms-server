@@ -11,15 +11,20 @@ datasource db {
 }
 
 model Leave {
-  id        Int      @id @unique @default(autoincrement())
-  userId    Int
-  startDate DateTime
-  endDate   DateTime
-  reason    String
-  User      User     @relation(fields: [userId], references: [id])
+  id               Int      @id @unique @default(autoincrement())
+  startDate        DateTime
+  endDate          DateTime
+  reason           String
+  isApproved       Boolean  @default(false)
   // 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  appliedByUserId  Int
+  appliedByUser    User     @relation(fields: [appliedByUserId], references: [id], name: "AppliedBy")
+  // 
+  approvedByUserId Int      @unique
+  approvedByUser   User     @relation(fields: [approvedByUserId], references: [id], name: "ApprovedBy")
+  // 
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model User {
@@ -32,12 +37,22 @@ model User {
   email             String   @unique
   password          String
   // 
+  role              UserRole @default(EMPLOYEE)
+  joiningDate       DateTime
+  // 
   isActive          Boolean  @default(true)
+  isDeleted         Boolean  @default(false)
   isConfirmed       Boolean  @default(false)
   confirmationToken String?
   // 
-  leaves            Leave[]
+  appliedLeave      Leave[]  @relation(name: "AppliedBy")
+  approvedLeave     Leave?   @relation(name: "ApprovedBy")
   // 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+enum UserRole {
+  EMPLOYEE
+  MANAGER
 }
