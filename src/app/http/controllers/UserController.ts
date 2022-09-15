@@ -18,6 +18,25 @@ export class UserController {
                     isActive: true,
                     isConfirmed: true,
                 },
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                    contactNumber: true,
+                    isActive: true,
+                    isConfirmed: true,
+                    leaves: {
+                        select: {
+                            id: true,
+                            startDate: true,
+                            endDate: true,
+                            reason: true,
+                        },
+                    },
+                    createdAt: true,
+                    updatedAt: true,
+                },
             });
 
             if (!user) {
