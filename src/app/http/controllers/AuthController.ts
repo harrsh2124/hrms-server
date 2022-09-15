@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../../../env';
 import { prisma } from '../../providers/db';
 import { sanitizeDate } from '../../utils/dateUtil';
+import { PROBATION_PERIOD } from '../../utils/types';
 import { ResponseHandler } from '../middleware/ResponseHandler';
 
 export class AuthController {
@@ -27,7 +28,14 @@ export class AuthController {
 
             const existingUser = await prisma.user.findFirst({
                 where: {
-                    email,
+                    OR: [
+                        {
+                            email,
+                        },
+                        {
+                            contactNumber,
+                        },
+                    ],
                 },
             });
             if (existingUser) {
@@ -35,6 +43,11 @@ export class AuthController {
             }
 
             const encryptedPassword = bcrypt.hashSync(password);
+            let currentLeaveBalance =
+                12 - joiningDate.getMonth() - 1 - PROBATION_PERIOD;
+            if (currentLeaveBalance < 0) {
+                currentLeaveBalance = 0;
+            }
 
             const user = await prisma.user.create({
                 data: {
@@ -45,6 +58,7 @@ export class AuthController {
                     lastName,
                     confirmationToken: crypto.randomBytes(20).toString('hex'),
                     joiningDate,
+                    currentLeaveBalance,
                 },
             });
 

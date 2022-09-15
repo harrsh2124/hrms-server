@@ -52,19 +52,42 @@ export class LeaveController {
             const { leaveId } = req.params;
             const approveLeave = req.originalUrl.includes('approve');
 
-            const leave = await prisma.leave.update({
+            const user = await prisma.user.findFirst({
                 where: {
-                    id: +leaveId,
-                },
-                data: {
-                    isApproved: approveLeave,
-                    approvedByUserId: approveLeave ? userID : null,
+                    id: userID,
                 },
             });
 
+            if (!user) {
+                throw new Error('User not found.');
+            }
+
+            await Promise.all([
+                await prisma.leave.update({
+                    where: {
+                        id: +leaveId,
+                    },
+                    data: {
+                        isApproved: approveLeave,
+                        approvedByUserId: approveLeave ? userID : null,
+                    },
+                }),
+                await prisma.user.update({
+                    where: {
+                        id: userID,
+                    },
+                    data: {
+                        currentLeaveBalance: approveLeave
+                            ? user.currentLeaveBalance - 1
+                            : user.currentLeaveBalance + 1,
+                    },
+                }),
+            ]);
+
             return ResponseHandler(req, res, {
-                leave,
-                message: 'Leave approved successfully.',
+                message: `Leave ${
+                    approveLeave ? 'approved' : 'reverted'
+                } successfully.`,
             });
         } catch (error) {
             return ResponseHandler(req, res, null, error);

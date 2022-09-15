@@ -28,28 +28,29 @@ model Leave {
 }
 
 model User {
-  id                Int      @id @unique @default(autoincrement())
+  id                  Int      @id @unique @default(autoincrement())
   // 
-  firstName         String
-  lastName          String
+  firstName           String
+  lastName            String
   // 
-  contactNumber     String   @unique
-  email             String   @unique
-  password          String
+  contactNumber       String   @unique
+  email               String   @unique
+  password            String
   // 
-  role              UserRole @default(EMPLOYEE)
-  joiningDate       DateTime
+  role                UserRole @default(EMPLOYEE)
+  joiningDate         DateTime
   // 
-  isActive          Boolean  @default(true)
-  isDeleted         Boolean  @default(false)
-  isConfirmed       Boolean  @default(false)
-  confirmationToken String?
+  isActive            Boolean  @default(true)
+  isDeleted           Boolean  @default(false)
+  isConfirmed         Boolean  @default(false)
+  confirmationToken   String?
+  currentLeaveBalance Int      @default(0)
   // 
-  appliedLeave      Leave[]  @relation(name: "AppliedBy")
-  approvedLeave     Leave[]  @relation(name: "ApprovedBy")
+  appliedLeave        Leave[]  @relation(name: "AppliedBy")
+  approvedLeave       Leave[]  @relation(name: "ApprovedBy")
   // 
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 enum UserRole {
