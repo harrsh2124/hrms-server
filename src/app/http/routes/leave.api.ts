@@ -14,3 +14,5 @@ LeaveRouter.post(
 LeaveRouter.put('/approve/:leaveId', LeaveController.approveLeave);
 
 LeaveRouter.put('/revert/:leaveId', LeaveController.approveLeave);
+
+LeaveRouter.get('/fetch', LeaveController.fetchLeave);

@@ -70,4 +70,42 @@ export class LeaveController {
             return ResponseHandler(req, res, null, error);
         }
     }
+
+    public static async fetchLeave(req: Request, res: Response) {
+        try {
+            const { userID } = req.body.requestUser;
+
+            const leaves = await prisma.leave.findMany({
+                where: {
+                    appliedByUserId: userID,
+                },
+                select: {
+                    id: true,
+                    startDate: true,
+                    endDate: true,
+                    appliedByUser: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                        },
+                    },
+                    approvedByUser: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                        },
+                    },
+                },
+            });
+
+            return ResponseHandler(req, res, {
+                leaves,
+                message: 'Leaves fetched successfully.',
+            });
+        } catch (error) {
+            return ResponseHandler(req, res, null, error);
+        }
+    }
 }
