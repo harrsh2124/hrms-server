@@ -21,7 +21,6 @@ model Leave {
   appliedByUser    User     @relation(fields: [appliedByUserId], references: [id], name: "AppliedBy")
   // 
   approvedByUserId Int?
-  approvedByUser   User?    @relation(fields: [approvedByUserId], references: [id], name: "ApprovedBy")
   // 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -46,7 +45,6 @@ model User {
   confirmationToken String?
   // 
   appliedLeave      Leave[]  @relation(name: "AppliedBy")
-  approvedLeave     Leave[]  @relation(name: "ApprovedBy")
   // 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
