@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../providers/db';
-import { validateDate } from '../../utils';
+import { isBefore, sanitizeDate } from '../../utils/dateUtil';
 import { ResponseHandler } from '../middleware/ResponseHandler';
 
 export class LeaveController {
@@ -9,21 +9,20 @@ export class LeaveController {
             const { userID } = req.body.requestUser;
             const { startDate, endDate, reason } = req.body;
 
-            if (!validateDate(startDate) || !validateDate(endDate)) {
+            let sanitizedStartDate = sanitizeDate(startDate);
+            let sanitizedEndDate = sanitizeDate(endDate);
+
+            if (!sanitizedStartDate || !sanitizedEndDate) {
                 throw new Error('Please enter a valid date.');
             }
 
-            const startDateObject = new Date(startDate);
-            const endDateObject = new Date(endDate);
-            const today = new Date();
-
-            if (today.getDate() > startDateObject.getDate()) {
+            if (isBefore(sanitizedStartDate)) {
                 throw new Error(
                     'Start date must be not be lesser than present date.'
                 );
             }
 
-            if (startDateObject.getDate() > endDateObject.getDate()) {
+            if (isBefore(sanitizedEndDate, sanitizedStartDate)) {
                 throw new Error(
                     'End date must be not be lesser than start date.'
                 );
@@ -31,8 +30,8 @@ export class LeaveController {
 
             const newLeave = await prisma.leave.create({
                 data: {
-                    startDate,
-                    endDate,
+                    startDate: sanitizedStartDate,
+                    endDate: sanitizedEndDate,
                     reason,
                     userId: +userID,
                 },
