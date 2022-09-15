@@ -1,16 +1,29 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { env } from '../../../env';
 import { prisma } from '../../providers/db';
+import { sanitizeDate } from '../../utils/dateUtil';
 import { ResponseHandler } from '../middleware/ResponseHandler';
-import { UserSignUp } from '../services/auth/UserSignUp';
 
 export class AuthController {
     public static async signUp(req: Request, res: Response) {
         try {
-            const { email, password, contactNumber, firstName, lastName } =
-                req.body;
+            let {
+                email,
+                password,
+                contactNumber,
+                firstName,
+                lastName,
+                joiningDate,
+            } = req.body;
+
+            joiningDate = sanitizeDate(joiningDate);
+
+            if (!joiningDate) {
+                throw new Error('Please enter a valid joining date.');
+            }
 
             const existingUser = await prisma.user.findFirst({
                 where: {
@@ -21,12 +34,18 @@ export class AuthController {
                 throw new Error('User already exists.');
             }
 
-            const user = await UserSignUp({
-                email,
-                password,
-                contactNumber,
-                firstName,
-                lastName,
+            const encryptedPassword = bcrypt.hashSync(password);
+
+            const user = await prisma.user.create({
+                data: {
+                    email,
+                    password: encryptedPassword,
+                    contactNumber,
+                    firstName,
+                    lastName,
+                    confirmationToken: crypto.randomBytes(20).toString('hex'),
+                    joiningDate,
+                },
             });
 
             return ResponseHandler(req, res, {

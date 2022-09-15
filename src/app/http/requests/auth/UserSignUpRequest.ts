@@ -1,4 +1,6 @@
-import { object, ref, string } from 'yup';
+import { UserRole } from '@prisma/client';
+import { isDate } from 'lodash';
+import { date, mixed, object, ref, string } from 'yup';
 
 export const UserSignUpRequest = object({
     firstName: string().required('First name is required.'),
@@ -16,4 +18,6 @@ export const UserSignUpRequest = object({
             [ref('password')],
             'Confirmation password and password must be same.'
         ),
+    role: mixed<UserRole>().oneOf(Object.values(UserRole)).required(),
+    joiningDate: string().required('Joining date is required.'),
 });

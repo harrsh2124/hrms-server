@@ -26,7 +26,7 @@ export class UserController {
                     contactNumber: true,
                     isActive: true,
                     isConfirmed: true,
-                    leaves: {
+                    appliedLeave: {
                         select: {
                             id: true,
                             startDate: true,

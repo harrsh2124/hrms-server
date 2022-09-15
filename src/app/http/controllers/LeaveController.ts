@@ -33,7 +33,7 @@ export class LeaveController {
                     startDate: sanitizedStartDate,
                     endDate: sanitizedEndDate,
                     reason,
-                    userId: +userID,
+                    appliedByUserId: userID,
                 },
             });
 
